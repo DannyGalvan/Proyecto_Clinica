@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital@1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@1,500&display=swap");
+
+body {
+  font-family: "Raleway", sans-serif;
+}
+
+.page-wrap {
+  min-height: 86.5vh;
+}
+
+.login {
+  position: relative;
+  z-index: 3;
+  -webkit-box-shadow: -1px -1px 23px 0px rgba(0, 0, 0, 0.72);
+  -moz-box-shadow: -1px -1px 23px 0px rgba(0, 0, 0, 0.72);
+  box-shadow: -1px -1px 23px 0px rgba(0, 0, 0, 0.72);
+  border-bottom-right-radius: 10%;
+  border-bottom-left-radius: 10%;
+}
+
+.login form {
+  border-bottom-right-radius: 10%;
+  border-bottom-left-radius: 10%;
+}
+
+.img-link {
+  -webkit-box-shadow: -1px -1px 23px 0px rgba(0, 0, 0, 0.72);
+  -moz-box-shadow: -1px -1px 23px 0px rgba(0, 0, 0, 0.72);
+  box-shadow: -1px -1px 23px 0px rgba(0, 0, 0, 0.72);
+  position: relative;
+  background-color: white;
+  top: 40px;
+  left: 75px;
+  z-index: 10;
+  height: 135px;
+  width: 135px;
+}
+
+.text-loading {
+  position: relative;
+  top: -10%;
+}
+
+.intermittent {
+  position: relative;
+  animation-name: mover;
+  animation-duration: 0.8s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+  animation-fill-mode: forwards;
+}
+
+.loading {
+  animation-name: loading;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+  animation-fill-mode: forwards;
+}
+
+html {
+  & body {
+    &.swal2-no-backdrop {
+      & .swal2-container {
+        background-color: rgba(0, 0, 0, 0.4) !important;
+      }
+    }
+  }
+}
+
+@keyframes mover {
+  0% {
+    top: 0px;
+  }
+  100% {
+    top: -50px;
+  }
+}
+
+@keyframes loading {
+  0% {
+    opacity: 30%;
+  }
+  100% {
+    opacity: 90%;
+  }
+}
