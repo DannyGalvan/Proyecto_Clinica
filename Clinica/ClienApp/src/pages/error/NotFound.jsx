@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { AnimatedLink } from "../../components/pure/AnimatedLink.jsx";
 
 export const NotFound = ({ Number, Message }) => {
   return (
@@ -8,9 +8,9 @@ export const NotFound = ({ Number, Message }) => {
           <div className="col-md-12 text-center">
             <span className="display-1 d-block">{Number}</span>
             <div className="mb-4 lead">{Message}</div>
-            <Link to={"/"} className="btn btn-link">
+            <AnimatedLink to={"/"} className="btn btn-link">
               Regresar Al Inicio
-            </Link>
+            </AnimatedLink>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ export const ProtectedRoute = ({ children }) => {
   const { authState } = useContext(AuthContext);
 
   if (!authState.isLoggedIn) {
-    return <Navigate to={`/login`} />;
+    return <Navigate to={"/login"} />;
   }
 
   return children;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Collapse } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import { AnimatedLink } from "./AnimatedLink.jsx";
 
 export const NavCollapse = ({ items, title, icon }) => {
   const [open, setOpen] = useState(false);
@@ -22,9 +22,9 @@ export const NavCollapse = ({ items, title, icon }) => {
       <Collapse in={open}>
         <div id="example-collapse-text" className="ms-3 mt-1">
           {items.map((item, key) => (
-            <Link className="nav-link p-2" key={key} to={item.path}>
+            <AnimatedLink className="nav-link p-2" key={key} to={item.path}>
               <FontAwesomeIcon icon={item.icon} /> {item.name}
-            </Link>
+            </AnimatedLink>
           ))}
         </div>
       </Collapse>

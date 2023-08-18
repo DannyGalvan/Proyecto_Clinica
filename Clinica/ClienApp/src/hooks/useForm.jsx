@@ -47,7 +47,7 @@ export const useForm = (initialForm, validateForm, petition) => {
     if (Object.keys(errors).length === 0) {
       try {
         const response = await petition(form);
-        if (!response.exito) {
+        if (response != null && !response.exito) {
           handleError(response.data ?? []);
           setResponse(response);
         } else {

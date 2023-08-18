@@ -7,7 +7,9 @@ export const Layout = ({ children }) => {
   return (
     <div>
       {authState.isLoggedIn && <Header />}
-      <main className="mt-5 pt-5">{children}</main>
+      <main className="mt-5 pt-5" id={"ROOT"}>
+        {children}
+      </main>
     </div>
   );
 };

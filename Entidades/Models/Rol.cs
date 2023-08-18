@@ -12,9 +12,9 @@ namespace Entities.Models
         [Key]
         public int Id { get; set; }
         [MaxLength(50)]
-        public string Name { get; set; } = string.Empty;
-        public virtual ICollection<User> Users { get; } = new List<User>();
+        public string Name { get;                     set; } = string.Empty;
+        public virtual ICollection<User> Users { get; set; } = new List<User>();
 
-        public virtual ICollection<RolOperation> RolOperations { get; } = new List<RolOperation>();
+        public virtual ICollection<RolOperation> RolOperations { get; set; } = new List<RolOperation>();
     }
 }

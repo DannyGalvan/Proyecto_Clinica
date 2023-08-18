@@ -1,14 +1,15 @@
 import { useContext } from "react";
 import { Container, Row, Col, Image, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { Login } from "../../api/Login.js";
 import { useForm } from "../../hooks/useForm.jsx";
 import { InputFormFloating } from "../../components/Input/InputFormFloating";
 import { ButtonLoading } from "../../components/Buttons/ButtonLoading";
 import { Response } from "../../components/Messages/Response";
 import { AuthContext } from "../../context/AuthContext.jsx";
-import { loadImages } from "../../util/loadImages.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useMutation } from "@tanstack/react-query";
+import { AnimatedLink } from "../../components/pure/AnimatedLink.jsx";
+import Logo from "/Clinica_Medica.png";
 
 const initialForm = {
   email: "",
@@ -35,39 +36,40 @@ const validationsForm = (form) => {
 
 const LoginPage = () => {
   const { signIn } = useContext(AuthContext);
+  const { data, mutate, isLoading } = useMutation({
+    mutationKey: ["addTodo"],
+    mutationFn: (form) => Login(form),
+    onSuccess: (data) => {
+      data.success && signIn(data.data);
+    },
+  });
+
   const send = async (form) => {
-    const res = await Login(form);
-    if (res.success != 0) {
-      signIn(res.data);
-    }
-    return res;
+    mutate(form);
   };
 
-  const {
-    form,
-    errors,
-    response,
-    loading,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-  } = useForm(initialForm, validationsForm, send);
+  const { form, errors, handleBlur, handleChange, handleSubmit } = useForm(
+    initialForm,
+    validationsForm,
+    send,
+  );
 
   return (
-    <Container className="d-flex align-items-center justify-content-center page-wrap">
+    <Container className="page-wrap">
+      {data != null && <Response code={data.success} message={data.message} />}
       <Row className="justify-content-center align-items-center">
         <Col
           xs={8}
-          md={6}
-          lg={6}
-          className="d-flex align-items-center mt-5 mt-md-0 intermittent"
+          md={10}
+          lg={5}
+          className="d-flex mt-5 mt-md-0 intermittent "
         >
-          <Image fluid alt="Logo" src={loadImages(`/Clinica_Medica.png`)} />
+          <Image fluid alt="Logo" className="w-100" src={Logo} />
         </Col>
         <Col
           xs={11}
-          md={6}
-          lg={6}
+          md={10}
+          lg={5}
           className="my-auto mx-auto mb-5 mt-5 mt-lg-0 login p-0"
         >
           <div className="bg-primary bg-gradient p-3 py-4">
@@ -76,14 +78,14 @@ const LoginPage = () => {
               <FontAwesomeIcon icon={"lock"} /> INGRESA
             </h3>
           </div>
-          <Form className="card p-5" onSubmit={handleSubmit}>
+          <Form className="card p-5 my-auto" onSubmit={handleSubmit}>
             <InputFormFloating
               label="Correo Electronico"
               name="email"
               error={errors.email}
               type="email"
               placeholder="nombre@ejemplo.com"
-              value={form.correo}
+              value={form.email}
               onBlur={handleBlur}
               onChange={handleChange}
             />
@@ -111,15 +113,15 @@ const LoginPage = () => {
                 size="md"
                 type="submit"
                 variant="primary"
-                loading={loading}
+                loading={isLoading}
               />
             </div>
-            <Link to={`/forgot_password/reset`} className="text-center mb-3">
+            <AnimatedLink
+              to={`/forgot_password/reset`}
+              className="text-center mb-3"
+            >
               ¿Olvido su Contraseña?
-            </Link>
-            {response && (
-              <Response code={response.success} message={response.message} />
-            )}
+            </AnimatedLink>
           </Form>
         </Col>
       </Row>

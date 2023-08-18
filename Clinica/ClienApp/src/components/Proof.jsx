@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { clinical } from "../axios/interceptors.js";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../pages/load/Loading.jsx";
+import { AuthContext } from "../context/AuthContext.jsx";
 
 export const Proof = () => {
   const [count, setCount] = useState(0);

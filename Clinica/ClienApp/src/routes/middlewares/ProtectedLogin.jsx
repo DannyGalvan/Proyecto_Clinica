@@ -6,7 +6,7 @@ export const ProtectedLogin = ({ children }) => {
   const { authState } = useContext(AuthContext);
 
   if (authState.isLoggedIn) {
-    return <Navigate to={`/`} />;
+    return <Navigate to={"/"} />;
   }
 
   return children;

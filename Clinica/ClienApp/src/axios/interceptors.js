@@ -18,6 +18,7 @@ export const authorization = clinical.interceptors.response.use(
 export const setAuthorization = (token) => {
   if (token !== undefined || token !== null) {
     clinical.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    console.log({ token }, "se configuro");
   } else {
     clinical.defaults.headers.common["Authorization"] = token;
   }

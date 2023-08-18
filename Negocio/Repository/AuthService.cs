@@ -44,8 +44,10 @@ namespace Business.Repository
                 return userResponse;
             }
 
-            List<Operation> operationsRol = _bd.RolOperations.Include(r => r.Operation)
-                                                  .Where(r => r.IdRol == oUser.RolId).Select(ro => new Operation()
+            List<RolOperation> rolOperations = _bd.RolOperations.Include(r => r.Operation)
+                                               .Where(r => r.IdRol == oUser.RolId).ToList();
+
+            List<Operation> operationsRol = rolOperations.Select(ro => new Operation()
                                                   {
                                                       Name = ro.Operation!.Name,
                                                       IdModule = ro.Operation.IdModule,
@@ -59,6 +61,8 @@ namespace Business.Repository
                                                                     inner join Modules m on o.IdModule = m.Id
                                                                     group by IdModule) as mod
                                                                     inner join Modules mo on mod.IdModule = mo.Id").ToList();
+
+            oUser.Rol!.RolOperations = rolOperations;
 
             List<Authorizations> authorizations = modules.Select(module => new Authorizations() { Module = module, Operations = operationsRol.Where(o => o.IdModule == module.Id).ToList() }).ToList();
 

@@ -1,5 +1,6 @@
 import { createContext, useReducer } from "react";
 import { AuthReducer } from "./AuthReducer.js";
+import { setAuthorization } from "../axios/interceptors.js";
 
 // Initial State
 export const authInitialState = {
@@ -27,7 +28,12 @@ export const AuthProvider = ({ children }) => {
   const [authState, dispatch] = useReducer(
     AuthReducer,
     authInitialState,
-    () => JSON.parse(window.localStorage.getItem("@auth")) || authInitialState,
+    () => {
+      const state =
+        JSON.parse(window.localStorage.getItem("@auth")) || authInitialState;
+      setAuthorization(state.token);
+      return state;
+    },
   );
 
   const signIn = (login) => {

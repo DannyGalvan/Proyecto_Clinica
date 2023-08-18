@@ -1,23 +1,22 @@
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
 import { Button, Col, Image } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu } from "../components/pure/Menu.jsx";
 import { APP_NAME } from "../config/constants.js";
 import { loadImages } from "../util/loadImages.js";
 import { AuthContext } from "../context/AuthContext.jsx";
+import { AnimatedLink } from "../components/pure/AnimatedLink.jsx";
 
 export const Header = () => {
   const { logout } = useContext(AuthContext);
 
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => setShow(!show);
 
   return (
     <header>
       <nav className="container-fluid py-2 m-0 bg-primary fixed-top bg-gradient d-flex flex-row">
-        <Link
+        <AnimatedLink
           to="/"
           className="col-lg-3 col-9 d-flex justify-content-around align-items-center text-decoration-none"
         >
@@ -30,7 +29,7 @@ export const Header = () => {
             src={loadImages("/Clinica_Medica.png")}
           />
           <p className="text-light h3 pt-2 fw-bold">{APP_NAME}</p>
-        </Link>
+        </AnimatedLink>
         <Col
           lg={9}
           xs={3}
@@ -43,7 +42,7 @@ export const Header = () => {
             <FontAwesomeIcon icon={!show ? "bars" : "close"} />
           </Button>
         </Col>
-        <Menu show={show} onClose={handleClose} />
+        <Menu show={show} onClose={handleShow} />
       </nav>
     </header>
   );

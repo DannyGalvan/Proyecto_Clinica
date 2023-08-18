@@ -31,7 +31,7 @@ export const Menu = ({ show, onClose }) => {
       show={show}
       onHide={onClose}
       scroll={true}
-      backdrop={true}
+      backdrop={false}
       className="bg-black bg-gradient text-light"
     >
       <Offcanvas.Header closeButton closeVariant="white">
