@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { Index } from "../pages/home/index.jsx";
 import { NotFound } from "../pages/error/NotFound.jsx";
 import { URL_BASE_APP } from "../config/constants.js";

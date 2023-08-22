@@ -11,7 +11,6 @@ export const AuthReducer = (state, action) => {
         isLoggedIn: true,
         ...action.payload,
       };
-      console.log(action.payload.token);
       setAuthorization(action.payload.token);
       window.localStorage.setItem("@auth", JSON.stringify(newState));
       return newState;

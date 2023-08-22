@@ -2,30 +2,11 @@ import { Image, Offcanvas } from "react-bootstrap";
 import { NavCollapse } from "./NavCollapse.jsx";
 import { APP_NAME } from "../../config/constants.js";
 import { loadImages } from "../../util/loadImages.js";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext.jsx";
 
-const userControl = [
-  {
-    name: "Crear Usuarios",
-    icon: "plus",
-    path: "/user/create",
-  },
-  {
-    name: "Listar Usuarios",
-    icon: "list-check",
-    path: "/user/list",
-  },
-  {
-    name: "Eliminar Usuarios",
-    icon: "list-check",
-    path: "/user/list",
-  },
-  {
-    name: "Editar Usuarios",
-    icon: "list-check",
-    path: "/user/list",
-  },
-];
 export const Menu = ({ show, onClose }) => {
+  const { authState } = useContext(AuthContext);
   return (
     <Offcanvas
       show={show}
@@ -40,31 +21,19 @@ export const Menu = ({ show, onClose }) => {
           rounded
           width={75}
           height={75}
-          src={loadImages("/Clinica_Medica.png")}
+          src={loadImages("/clinicMedic.png")}
         />
         <Offcanvas.Title className="fw-bold">{APP_NAME}</Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        <NavCollapse
-          title={"Mantenimiento de Usuarios"}
-          icon={"users"}
-          items={userControl}
-        />
-        <NavCollapse
-          title={"Mantenimiento de Usuarios"}
-          icon={"users"}
-          items={userControl}
-        />
-        <NavCollapse
-          title={"Mantenimiento de Usuarios"}
-          icon={"users"}
-          items={userControl}
-        />
-        <NavCollapse
-          title={"Mantenimiento de Usuarios"}
-          icon={"users"}
-          items={userControl}
-        />
+        {authState.operations.map((o) => (
+          <NavCollapse
+            key={o.module.id}
+            title={o.module.name}
+            icon={o.module.image}
+            items={o.operations}
+          />
+        ))}
       </Offcanvas.Body>
     </Offcanvas>
   );

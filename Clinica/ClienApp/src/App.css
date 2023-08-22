@@ -5,30 +5,6 @@ body {
   font-family: "Raleway", sans-serif;
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes fade-out {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes slide-from-right {
-  from {
-    transform: translateX(60px);
-  }
-}
-
-@keyframes slide-to-left {
-  to {
-    transform: translateX(-60px);
-  }
-}
-
 main {
   view-transition-name: main;
 }
@@ -96,6 +72,27 @@ main {
   animation-fill-mode: forwards;
 }
 
+.rotate-enter {
+  transform: rotate(-90deg);
+}
+
+.rotate-exit {
+  transform: rotate(0deg);
+}
+
+.rotate-enter-active {
+  transform: rotate(0deg);
+}
+
+.rotate-exit-active {
+  transform: rotate(-90deg);
+}
+
+.rotate-enter-active,
+.rotate-exit-active {
+  transition: transform 200ms;
+}
+
 html {
   & body {
     &.swal2-no-backdrop {
@@ -121,5 +118,29 @@ html {
   }
   100% {
     opacity: 90%;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-from-right {
+  from {
+    transform: translateX(60px);
+  }
+}
+
+@keyframes slide-to-left {
+  to {
+    transform: translateX(-60px);
   }
 }
