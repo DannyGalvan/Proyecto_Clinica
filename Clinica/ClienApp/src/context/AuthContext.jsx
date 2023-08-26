@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     authInitialState,
     () => {
       const state =
-        JSON.parse(window.localStorage.getItem("@auth")) || authInitialState;
+        JSON.parse(window.localStorage.getItem("@auth")) ?? authInitialState;
       setAuthorization(state.token);
       return state;
     },

@@ -1,9 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { transitionViewIfSupported } from "../../util/ViewTransition.js";
+import { useNavigate } from "react-router-dom";
 
 export const AnimatedLink = ({ className, to, children }) => {
   const navigate = useNavigate();
-
   return (
     <a
       href={to}

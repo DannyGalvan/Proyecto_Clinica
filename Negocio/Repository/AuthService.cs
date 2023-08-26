@@ -11,6 +11,7 @@ using Entities.DTO;
 using Entities.Request;
 using Microsoft.EntityFrameworkCore;
 using Entities.Response;
+using System.Globalization;
 
 namespace Business.Repository
 {
@@ -31,54 +32,79 @@ namespace Business.Repository
         {
             Response<AuthResponse> userResponse = new();
 
-            string password = Resources.ConvertSha256(model.Password!);
+            string password = Resources.ConvertSha256(model.Password);
 
             User? oUser = _bd.Users
-                             .Include(u => u.Rol)
                              .FirstOrDefault(u => u.Password == password && u.Email == model.Email);
 
             if (oUser == null || oUser.Active == false)
             {
                 userResponse.Success = false;
-                userResponse.Message = "Usuario y/o Contraseña invalidos";
+                userResponse.Message = "Usuario y/o Contraseña Invalidos";
                 return userResponse;
             }
 
-            List<RolOperation> rolOperations = _bd.RolOperations.Include(r => r.Operation)
-                                               .Where(r => r.IdRol == oUser.RolId).ToList();
+            List<Authorizations> authorizations = new();
 
-            List<Operation> operationsRol = rolOperations.Select(ro => new Operation()
-                                                  {
-                                                      Name = ro.Operation!.Name,
-                                                      IdModule = ro.Operation.IdModule,
-                                                      Id = ro.Operation.Id,
-                                                  }).ToList();
+            Employee? employee = _bd.Employees.Include(e => e.Rol).FirstOrDefault(u => u.UserId == oUser.Id);
 
-            var modules =
-                _bd.Modules
-                   .FromSql(@$"select Id,Name,Description,Image,Path from (select IdModule from RolOperations ro 
-                                                                    inner join Operations o on o.Id = ro.IdOperation
+            if (employee != null)
+            {
+
+                List<RolOperation> rolOperations = _bd.RolOperations.Include(r => r.Operation)
+                                                      .Where(r => r.RolId == employee.RolId).ToList();
+
+                List<Operation> operationsRol = rolOperations.Select(ro => new Operation()
+                                                                           {
+                                                                               Name     = ro.Operation!.Name,
+                                                                               IdModule = ro.Operation.IdModule,
+                                                                               Id       = ro.Operation.Id,
+                                                                               CreatedAt = ro.Operation.CreatedAt,
+                                                                               IsVisible = ro.Operation.IsVisible,
+                                                                               Icon = ro.Operation.Icon,
+                                                                               Path = ro.Operation.Path,
+                                                                               Description = ro.Operation.Description
+                                                                           }).ToList();
+
+                var modules =
+                    _bd.Modules
+                       .FromSql(@$"select Id,Name,Description,Image,Path,CreatedAt,CreatedBy,UpdatedAt,UpdatedBy from (select IdModule from RolOperations ro 
+                                                                    inner join Operations o on o.Id = ro.OperationId
                                                                     inner join Modules m on o.IdModule = m.Id
                                                                     group by IdModule) as mod
                                                                     inner join Modules mo on mod.IdModule = mo.Id").ToList();
 
-            oUser.Rol!.RolOperations = rolOperations;
+                employee.Rol!.RolOperations = rolOperations;
 
-            List<Authorizations> authorizations = modules.Select(module => new Authorizations() { Module = module, Operations = operationsRol.Where(o => o.IdModule == module.Id).ToList() }).ToList();
+                authorizations = modules.Select(module => new Authorizations() { Module = module, Operations = operationsRol.Where(o => o.IdModule == module.Id).ToList() }).ToList();
+
+            }
+
+            Client? client = employee == null ? _bd.Clients.FirstOrDefault(c => c.UserId == oUser.Id) : null;
+
+            var nameEmployee       = employee != null ? employee.Name : "";
+            var nameClient = client != null ? client.Name : "";
+            var username   = string.Empty;
+
+            if (!string.IsNullOrEmpty(nameEmployee))
+                username = nameEmployee;
+            else if (!string.IsNullOrEmpty(nameClient))
+                username = nameClient;
+
 
             AuthResponse auth = new()
             {
-                Email = oUser.Email!,
-                IdUser = oUser.Id,
-                Name = oUser.Name!,
-                Rol = oUser.RolId,
-                Token = GetToken(oUser),
+                Email      = oUser.Email,
+                IdUser     = oUser.Id,
+                Name       = username,
+                Rol        = employee?.RolId ?? 0,
+                Token      = GetToken(oUser, employee, username),
                 Operations = authorizations
             };
 
 
             userResponse.Success = true;
-            userResponse.Message = "Inicio de sesion exitosa";
+            userResponse.Message = "Inicio de sesión exitosa";
             userResponse.Data = auth;
 
             return userResponse;
@@ -94,7 +120,7 @@ namespace Business.Repository
             if (oUser == null || model.Password != model.ConfirmPassword)
             {
                 response.Success = false;
-                response.Message = "Las Contraseñas no Coinciden";
+                response.Message = "Las Contraseñas no coinciden";
                 response.Data = "";
                 return response;
             }
@@ -104,7 +130,7 @@ namespace Business.Repository
             if (oUser.Password == encrypt)
             {
                 response.Success = false;
-                response.Message = "La nueva contrseña debe ser distinta a la contraseña anterior";
+                response.Message = "La nueva contraseña debe ser distinta a la contraseña anterior";
                 response.Data = "";
                 return response;
             }
@@ -174,7 +200,7 @@ namespace Business.Repository
 
             Response<string> response = new();
 
-            User? oUser = _bd.Users.FirstOrDefault(u => u.RecoveryToken == token);
+            var oUser = _bd.Users.FirstOrDefault(u => u.RecoveryToken == token);
 
             if (oUser == null)
             {
@@ -184,10 +210,13 @@ namespace Business.Repository
                 return response;
             }
 
-            DateTime dateToken = oUser.DateToken.AddMinutes(15);
-            DateTime currentDate = DateTime.Now;
+            DateTime? dateToken = !string.IsNullOrEmpty(oUser.DateToken)
+                                     ? DateTime.ParseExact(oUser.DateToken, "yyyy-MM-dd mm:ss:f", CultureInfo.InvariantCulture)
+                                     : null;
 
-            if (currentDate.CompareTo(dateToken) >= 0)
+            var currentDate = DateTime.Now;
+
+            if (dateToken != null && currentDate.CompareTo(dateToken) >= 0)
             {
                 response.Success = false;
                 response.Message = "Tu Token ya ha Expirado";
@@ -196,7 +225,7 @@ namespace Business.Repository
             }
 
             response.Success = true;
-            response.Message = "Token Valido";
+            response.Message = "Token Válido";
             response.Data = token;
 
             return response;
@@ -211,7 +240,7 @@ namespace Business.Repository
             if (!email.IsMatch(model.Email))
             {
                 response.Success = false;
-                response.Message = "Ingrese un correo Valido";
+                response.Message = "Ingrese un correo válido";
                 response.Data = "";
                 return response;
             }
@@ -226,12 +255,12 @@ namespace Business.Repository
                 return response;
             }
 
-            string token = Resources.ConvertSha256(Guid.NewGuid().ToString());
+            var token = Resources.ConvertSha256(Guid.NewGuid().ToString());
 
             oUser.RecoveryToken = token;
-            oUser.DateToken = DateTime.Now;
+            oUser.DateToken = DateTime.Now.ToString("yyyy-MM-dd mm:ss:f");
             _bd.Users.Update(oUser);
-            int saveChanges = _bd.SaveChanges();
+            var saveChanges = _bd.SaveChanges();
 
             if (saveChanges == 0)
             {
@@ -241,12 +270,12 @@ namespace Business.Repository
                 return response;
             }
 
-            string asunto = "Solicitud De Cambio de Contraseña";
-            string link = $"{_appSettings.MailForwarding}/app/RecoveryPassword?token={token}";
-            string messageMail =
+            const string affair = "Solicitud De Cambio de Contraseña";
+            var       link   = $"{_appSettings.MailForwarding}/app/RecoveryPassword?token={token}";
+            var messageMail =
                 $"<h3>Ingese al siguiente link para cambiar su contraseña!</h3></br><a href='{link}'>Cambiar Contraseña</a>";
 
-            var sendMail = _mail.Send(model.Email, asunto, messageMail);
+            var sendMail = _mail.Send(model.Email, affair, messageMail);
 
             if (!sendMail)
             {
@@ -263,22 +292,22 @@ namespace Business.Repository
             return response;
         }
 
-        private string GetToken(User user)
+        private string GetToken(User user, Employee? employee, string username)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret!);
+            var key          = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var claims = new List<Claim>()
                              {
-                                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                                 new Claim(ClaimTypes.Email, user.Email!),
-                                 new Claim(ClaimTypes.Name, user.Name!),
-                                 new Claim(ClaimTypes.Hash, Guid.NewGuid().ToString()),
-                                 new Claim("Operator", user.RolId.ToString()),
+                                 new (ClaimTypes.NameIdentifier, user.Id.ToString()),
+                                 new (ClaimTypes.Email, user.Email),
+                                 new (ClaimTypes.Name, username),
+                                 new (ClaimTypes.Hash, Guid.NewGuid().ToString()),
+                                 new ("Operator", employee != null ? employee.RolId.ToString() : "Cliente"),
                              };
 
-            if (user.Rol!.RolOperations.Count != 0)
+            if (employee != null && employee.Rol!.RolOperations.Count != 0)
             {
-                claims.AddRange(user.Rol!.RolOperations.Select(item => new Claim(ClaimTypes.Role, item.IdOperation.ToString())));
+                claims.AddRange(employee.Rol!.RolOperations.Select(item => new Claim(ClaimTypes.Role, item.OperationId.ToString())));
             }
 
             var tokenDescriptor = new SecurityTokenDescriptor

@@ -9,7 +9,7 @@ import { AuthContext } from "../../context/AuthContext.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation } from "@tanstack/react-query";
 import { AnimatedLink } from "../../components/pure/AnimatedLink.jsx";
-import Logo from "/Clinica_Medica.png";
+import Logo from "/clinicMedic.png";
 
 const initialForm = {
   email: "",
@@ -121,6 +121,9 @@ const LoginPage = () => {
               className="text-center mb-3"
             >
               ¿Olvido su Contraseña?
+            </AnimatedLink>
+            <AnimatedLink to={`/createAccount`} className="text-center mb-3">
+              ¿No Tienes Cuenta?
             </AnimatedLink>
           </Form>
         </Col>

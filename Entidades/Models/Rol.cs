@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.Text.Json.Serialization;
 
 namespace Entities.Models
 {
-    public class Rol
+    public class Rol : Catalogue
     {
-        [Key]
-        public int Id { get; set; }
-        [MaxLength(50)]
-        public string Name { get;                     set; } = string.Empty;
-        public virtual ICollection<User> Users { get; set; } = new List<User>();
+        [JsonIgnore]
+        public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
         public virtual ICollection<RolOperation> RolOperations { get; set; } = new List<RolOperation>();
     }
