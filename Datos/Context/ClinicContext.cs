@@ -13,7 +13,7 @@ namespace Data.Context
         public ClinicContext(DbContextOptions<ClinicContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlServer("server=DESKTOP-4L7JSNJ; Database=Clinic;User Id=sa; Password=andrea2911; Trust Server Certificate=true");
+            => optionsBuilder.UseSqlServer("");
 
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Rol> Roles { get; set; }
@@ -142,7 +142,7 @@ namespace Data.Context
                                                              Id = 1,
                                                              Email = "pruebas.test29111999@gmail.com",
                                                              Password = "b20b0f63ce2ed361e8845d6bf2e59811aaa06ec96bcdb92f9bc0c5a25e83c9a6",
-                                                             Number = "51995142",
+                                                             Number = 12345678,
                                                              Active = true,
                                                              Confirm = true,
                                                          }
@@ -290,8 +290,6 @@ namespace Data.Context
                       .HasMaxLength(8);
                 entity.Property(e => e.Cui)
                       .HasMaxLength(13);
-                entity.Property(e => e.Number)
-                      .HasMaxLength(8);
                 entity.Property(e => e.Address)
                       .HasMaxLength(255);
                 entity.Property(e => e.Profession)

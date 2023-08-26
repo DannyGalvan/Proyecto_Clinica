@@ -4,6 +4,7 @@ using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ClinicContext))]
-    partial class ClinicContextModelSnapshot : ModelSnapshot
+    [Migration("20230826062445_DeleteTheColumnNumberIntoClient")]
+    partial class DeleteTheColumnNumberIntoClient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -296,7 +299,7 @@ namespace Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 924, DateTimeKind.Local).AddTicks(2632),
+                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 898, DateTimeKind.Local).AddTicks(9175),
                             CreatedBy = 1,
                             DepartmentId = 1,
                             Name = "Usuario Manager",
@@ -660,7 +663,7 @@ namespace Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 925, DateTimeKind.Local).AddTicks(7494),
+                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 900, DateTimeKind.Local).AddTicks(4771),
                             Description = "Creación de nuevo analista",
                             Icon = "plus",
                             IdModule = 1,
@@ -671,7 +674,7 @@ namespace Data.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 925, DateTimeKind.Local).AddTicks(7744),
+                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 900, DateTimeKind.Local).AddTicks(5293),
                             Description = "Actualización de analista",
                             Icon = "",
                             IdModule = 1,
@@ -682,7 +685,7 @@ namespace Data.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 925, DateTimeKind.Local).AddTicks(7931),
+                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 900, DateTimeKind.Local).AddTicks(5861),
                             Description = "Listado de Analistas Existentes",
                             Icon = "",
                             IdModule = 1,
@@ -693,7 +696,7 @@ namespace Data.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 925, DateTimeKind.Local).AddTicks(8116),
+                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 900, DateTimeKind.Local).AddTicks(6250),
                             Description = "Actualización de analista",
                             Icon = "",
                             IdModule = 1,
@@ -970,28 +973,28 @@ namespace Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 926, DateTimeKind.Local).AddTicks(6687),
+                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 903, DateTimeKind.Local).AddTicks(2713),
                             OperationId = 1,
                             RolId = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 926, DateTimeKind.Local).AddTicks(6815),
+                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 903, DateTimeKind.Local).AddTicks(3020),
                             OperationId = 2,
                             RolId = 1
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 926, DateTimeKind.Local).AddTicks(6932),
+                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 903, DateTimeKind.Local).AddTicks(3254),
                             OperationId = 3,
                             RolId = 1
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 926, DateTimeKind.Local).AddTicks(7034),
+                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 903, DateTimeKind.Local).AddTicks(3464),
                             OperationId = 4,
                             RolId = 1
                         });
@@ -1387,7 +1390,7 @@ namespace Data.Migrations
                             Id = 1,
                             Active = true,
                             Confirm = true,
-                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 927, DateTimeKind.Local).AddTicks(8511),
+                            CreatedAt = new DateTime(2023, 8, 26, 0, 24, 45, 908, DateTimeKind.Local).AddTicks(3875),
                             DateToken = "",
                             Email = "pruebas.test29111999@gmail.com",
                             Number = 12345678,

@@ -13,7 +13,7 @@ namespace Entities.Models
         public bool Reset { get; set; }
         public string CreatedAt { get; set; } = string.Empty;
         public string DateToken { get; set; } = string.Empty;
-        public string Number { get; set; } = string.Empty;
+        public int Number { get; set; }
         public string? RecoveryToken { get; set; }
         [JsonIgnore] 
         public virtual ICollection<Employee> AssigningEmployees { get; set; } = new List<Employee>();
