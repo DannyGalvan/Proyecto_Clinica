@@ -17,11 +17,11 @@ namespace Business.Repository
 {
     public class AuthService : IAuthService
     {
-        private readonly ClinicContext _bd;
+        private readonly ClinicContextMySQL _bd;
         private readonly AppSettings _appSettings;
         private readonly IMail _mail;
 
-        public AuthService(IOptions<AppSettings> appSettings, ClinicContext bd, IMail mail)
+        public AuthService(IOptions<AppSettings> appSettings, ClinicContextMySQL bd, IMail mail)
         {
             _appSettings = appSettings.Value;
             _bd = bd;
@@ -68,11 +68,11 @@ namespace Business.Repository
 
                 var modules =
                     _bd.Modules
-                       .FromSql(@$"select Id,Name,Description,Image,Path,CreatedAt,CreatedBy,UpdatedAt,UpdatedBy from (select IdModule from RolOperations ro 
-                                                                    inner join Operations o on o.Id = ro.OperationId
-                                                                    inner join Modules m on o.IdModule = m.Id
-                                                                    group by IdModule) as mod
-                                                                    inner join Modules mo on mod.IdModule = mo.Id").ToList();
+                       .FromSql(@$"SELECT mo.Id, mo.Name, mo.Description,mo.Image, mo.Path, mo.CreatedAt, mo.CreatedBy, mo.UpdatedAt, mo.UpdatedBy
+                                    FROM (SELECT DISTINCT o.IdModule FROM roloperations ro
+                                                                              INNER JOIN operations o ON o.Id = ro.OperationId
+                                                                              INNER JOIN modules m ON o.IdModule = m.Id) As m
+                                    INNER JOIN modules mo ON m.IdModule = mo.Id;").ToList();
 
                 employee.Rol!.RolOperations = rolOperations;
 

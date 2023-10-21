@@ -7,6 +7,8 @@ using System.Text;
 using Entities.Models;
 using Business.Interfaces;
 using Business.Repository;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -25,9 +27,15 @@ IConfigurationSection appSettingsSection = configuration.GetSection("AppSettings
 
 builder.Services.Configure<AppSettings>(appSettingsSection);
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddDbContext<ClinicContext>(options => {
                                                      options.UseSqlServer(builder.Configuration.GetConnectionString("Conn"));
                                                  });
+builder.Services.AddDbContext<ClinicContextMySQL>(options =>
+{
+    options.UseMySql("Server=localhost;Database=ClinicTest;Uid=root;Pwd=andrea2911;", ServerVersion.Parse("8.0.32-mysql"));
+});
 
 builder.Services.AddAuthentication(d =>
                                    {
@@ -63,6 +71,17 @@ builder.Services.AddScoped<IMail, Mail>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
+
+//cache stores in memory
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext    = scope.ServiceProvider.GetRequiredService<ClinicContext>();
+    var catalogModules = dbContext.Modules.ToList();
+
+    var cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
+    cache.Set("Modules", catalogModules);
+}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
